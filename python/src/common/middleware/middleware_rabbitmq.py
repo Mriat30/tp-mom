@@ -6,7 +6,9 @@ from .middleware import MessageMiddlewareQueue, MessageMiddlewareExchange
 class MessageMiddlewareQueueRabbitMQ(MessageMiddlewareQueue):
 
     def __init__(self, host, queue_name):
-        pass
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
+        self.channel = self.connection.channel()
+        self.channel.queue_declare(queue=queue_name)
 
     def start_consuming(self, on_message_callback):
         pass
@@ -18,7 +20,6 @@ class MessageMiddlewareQueueRabbitMQ(MessageMiddlewareQueue):
         pass
 
     def close(self):
-        pass
 
 class MessageMiddlewareExchangeRabbitMQ(MessageMiddlewareExchange):
     
