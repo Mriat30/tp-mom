@@ -106,42 +106,32 @@ def test_messages_dont_mix_between_queues():
 #  PRODUCER CONSUMER TESTS
 # -----------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_one_producer_one_consumer_one_message():
 	_test_queue(1, 1, 1)
 	
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_one_producer_one_consumer_some_messages():
 	_test_queue(1, 1, 3)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_one_producer_one_consumer_many_messages():
 	_test_queue(1, 1, 13)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_one_producer_many_consumers_some_messages():
 	_test_queue(1, 3, 3)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_one_producer_many_consumers_many_messages():
 	_test_queue(1, 3, 13)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_many_producers_one_consumer_one_message():
 	_test_queue(3, 1, 1)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_many_producers_one_consumer_some_messages():
 	_test_queue(3, 1, 3)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_many_producers_one_consumer_many_messages():
 	_test_queue(3, 1, 13)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_many_producers_many_consumers_some_messages():
 	_test_queue(3, 3, 3)
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_many_producers_many_consumers_many_messages():
 	_test_queue(3, 3, 13)
