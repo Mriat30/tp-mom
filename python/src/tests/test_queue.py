@@ -63,7 +63,6 @@ def test_init_and_close():
 	queue = middleware_rabbitmq.MessageMiddlewareQueueRabbitMQ(MOM_HOST, TEST_QUEUE_NAME)
 	queue.close()
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_listen_to_message_and_close():
 	message = b"message"
 	message_set = set()
