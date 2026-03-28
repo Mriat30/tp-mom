@@ -74,7 +74,6 @@ def test_listen_to_message_and_close():
 	assert len(message_set) == 1, "The amount of consummed messages is not as expected"
 	assert message in message_set, f"The message {message} was not consummed"
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def _test_messages_dont_mix_between_queues(queue_name, queue, messages):
 	message_set = set()
 	message_consumer_tester = MessageConsumerTester(queue, message_set, len(messages))
@@ -85,7 +84,6 @@ def _test_messages_dont_mix_between_queues(queue_name, queue, messages):
 	for message in messages:
 		assert message in message_set, f"The message {message} was not consummed from {queue_name}"
 
-@pytest.mark.skip(reason="no ejecutar ahora")
 def test_messages_dont_mix_between_queues():
 	messages = _generate_messages(8)
 	messages_a = messages[:4]
