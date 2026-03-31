@@ -1,5 +1,5 @@
 import pika
-from .middleware import MessageMiddlewareQueue, MessageMiddlewareExchange, MessageMiddlewareDisconnectedError, MessageMiddlewareMessageError
+from .middleware import MessageMiddlewareQueue, MessageMiddlewareExchange, MessageMiddlewareDisconnectedError, MessageMiddlewareMessageError, MessageMiddlewareCloseError
 class MessageMiddlewareQueueRabbitMQ(MessageMiddlewareQueue):
     def __init__(self, host, queue_name):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
@@ -23,7 +23,10 @@ class MessageMiddlewareQueueRabbitMQ(MessageMiddlewareQueue):
             raise MessageMiddlewareMessageError(f"An error occurred while sending message: {str(e)}")
 
     def close(self):
-        self.connection.close()
+        try: 
+            self.connection.close()
+        except Exception as e:
+            raise MessageMiddlewareCloseError(f"An error occurred while closing connection: {str(e)}")
     
     def _callback_wrapper(self, on_message_callback):
         def wrapper(ch, method, properties, body):
@@ -66,4 +69,7 @@ class MessageMiddlewareExchangeRabbitMQ(MessageMiddlewareExchange):
 
     def close(self):
         self._receiver_queue.close()
-        self.connection.close()
+        try: 
+            self.connection.close()
+        except Exception as e:
+            raise MessageMiddlewareCloseError(f"An error occurred while closing connection: {str(e)}")
