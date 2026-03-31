@@ -15,7 +15,12 @@ class MessageMiddlewareQueueRabbitMQ(MessageMiddlewareQueue):
         self.channel.stop_consuming()
 
     def send(self, message):
-        self.channel.basic_publish(exchange='', routing_key=self.queue_name, body=message)
+        try: 
+            self.channel.basic_publish(exchange='', routing_key=self.queue_name, body=message)
+        except pika.exceptions.AMQPConnectionError:
+            raise MessageMiddlewareDisconnectedError("Connection to RabbitMQ lost while sending message.")
+        except Exception as e:
+            raise MessageMiddlewareMessageError(f"An error occurred while sending message: {str(e)}")
 
     def close(self):
         self.connection.close()
