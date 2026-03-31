@@ -1,6 +1,5 @@
 import pika
-from .middleware import MessageMiddlewareQueue, MessageMiddlewareExchange
-
+from .middleware import MessageMiddlewareQueue, MessageMiddlewareExchange, MessageMiddlewareDisconnectedError, MessageMiddlewareMessageError
 class MessageMiddlewareQueueRabbitMQ(MessageMiddlewareQueue):
     def __init__(self, host, queue_name):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
@@ -47,7 +46,12 @@ class MessageMiddlewareExchangeRabbitMQ(MessageMiddlewareExchange):
             
     def send(self, message):
         for routing_key in self.routing_keys:
-            self.channel.basic_publish(exchange=self.exchange_name, routing_key=routing_key, body=message)
+            try:
+                self.channel.basic_publish(exchange=self.exchange_name, routing_key=routing_key, body=message)
+            except pika.exceptions.AMQPConnectionError:
+                raise MessageMiddlewareDisconnectedError("Connection to RabbitMQ lost while sending message.")
+            except Exception as e:
+                raise MessageMiddlewareMessageError(f"An error occurred while sending message: {str(e)}")
     
     def start_consuming(self, on_message_callback):
         self._receiver_queue.start_consuming(on_message_callback)
