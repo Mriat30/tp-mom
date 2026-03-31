@@ -62,10 +62,20 @@ class MessageMiddlewareExchangeRabbitMQ(MessageMiddlewareExchange):
                 raise MessageMiddlewareMessageError(f"An error occurred while sending message: {str(e)}")
     
     def start_consuming(self, on_message_callback):
-        self._receiver_queue.start_consuming(on_message_callback)
+        try:
+            self._receiver_queue.start_consuming(on_message_callback)
+        except pika.exceptions.AMQPConnectionError:
+            raise MessageMiddlewareDisconnectedError("Connection to RabbitMQ lost while starting to consume messages.")
+        except Exception as e:
+            raise MessageMiddlewareMessageError(f"An error occurred while starting to consume messages: {str(e)}")
 
     def stop_consuming(self):
-        self._receiver_queue.stop_consuming()
+        try:
+            self._receiver_queue.stop_consuming()
+        except pika.exceptions.AMQPConnectionError:
+            raise MessageMiddlewareDisconnectedError("Connection to RabbitMQ lost while stopping consumption.")
+        except Exception as e:
+            raise MessageMiddlewareMessageError(f"An error occurred while stopping consumption: {str(e)}")
 
     def close(self):
         self._receiver_queue.close()
