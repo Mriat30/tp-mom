@@ -36,7 +36,7 @@ class MessageMiddlewareQueueRabbitMQ(MessageMiddlewareQueue):
         return wrapper
 
 class MessageMiddlewareExchangeRabbitMQ(MessageMiddlewareExchange):
-    _EXCHANGE_TYPE = 'topic'
+    _EXCHANGE_TYPE = 'direct'
     
     def __init__(self, host, exchange_name, routing_keys):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
